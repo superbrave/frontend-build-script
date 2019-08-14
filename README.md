@@ -22,15 +22,15 @@ npm i https://github.com/superbrave/frontend-build-script
 
 ## 2. Configuration
 
-Copy the file `/node_modules/frontend-build-script/example.webpack.settings.js` to `./webpack.settings.js`.
+Copy the file `./node_modules/frontend-build-script/example.webpack.settings.js` to `./webpack.settings.js`.
 Additionally change `.env.example` to `.env` if you want settings for local development.
 
 Make sure you copy the following files to your project's root folder:
 
 ```bash
-cp /node_modules/frontend-build-script/.eslintrc ./.eslintrc
-cp /node_modules/frontend-build-script/.stylelintrc.json ./.stylelintrc.json
-cp /node_modules/frontend-build-script/postcss.config.js ./postcss.config.js
+cp ./node_modules/frontend-build-script/.eslintrc ./.eslintrc
+cp ./node_modules/frontend-build-script/.stylelintrc.json ./.stylelintrc.json
+cp ./node_modules/frontend-build-script/postcss.config.js ./postcss.config.js
 ```
 
 Now you can change the variables as you desire.
