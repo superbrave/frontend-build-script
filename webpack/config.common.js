@@ -60,9 +60,9 @@ const configureBabelLoader = browserList => {
             "@babel/plugin-transform-runtime"
           ]
         }
-        // },
-        // {
-        //     loader: 'eslint-loader'
+      },
+      {
+        loader: "eslint-loader"
       }
     ]
   };
