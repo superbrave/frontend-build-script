@@ -1,0 +1,4 @@
+node_modules
+dist
+.env
+webpack/webpack.settings.js
