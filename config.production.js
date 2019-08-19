@@ -12,7 +12,7 @@ const path = require('path');
 const glob = require('glob-all');
 
 //webpack plugins
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const PurgecssPlugin = require('purgecss-webpack-plugin');
 const PurgecssWhitelisterPlugin = require('purgecss-whitelister');
@@ -60,9 +60,9 @@ const configureStyles = (buildType) => {
                     loader: 'postcss-loader',
                     options: {
                         sourceMap: true,
-						config: {
-							path: './node_modules/superbrave-build-script/'
-						}
+                        config: {
+                            path: './node_modules/superbrave-build-script/'
+                        }
                     }
                 },
                 {
@@ -188,7 +188,7 @@ module.exports = [
                 new PurgecssPlugin(
                     configurePurgeCss()
                 ),
-				new CleanWebpackPlugin(
+                new CleanWebpackPlugin(
                     configureCleanWebpack()
                 )
             ]
