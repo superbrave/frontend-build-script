@@ -61,7 +61,7 @@ const configureStyles = (buildType) => {
                     options: {
                         sourceMap: true,
 						config: {
-							path: './node_modules/aditya/'
+							path: './node_modules/superbrave-build-script/'
 						}
                     }
                 },
