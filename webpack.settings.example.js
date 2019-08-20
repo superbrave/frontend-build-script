@@ -12,21 +12,21 @@ module.exports = {
     copyright: "SuperBrave", //That's us!
     paths: { //Configuration of the base paths of the config.
         src: {
-            base: "../src/",
-            css: "../src/scss/",
-            js: "../src/js/",
-            img: "../src/images",
-            fonts: "../src/fonts",
+            base: "./src/",
+            css: "./src/scss/",
+            js: "./src/js/",
+            img: "./src/images",
+            fonts: "./src/fonts",
             templates: "./src/templates",
             entryFile: "/index.html"
         },
         dist: {
-            base: "../dist/",
+            base: "./dist/",
             clean: [
                 '**/*',
             ]
         },
-        templates: "../dist/templates" //For dev server
+        templates: "./dist/templates" //For dev server
     },
     urls: { //Set urls for the project.
         live: "https://example.com/",
@@ -80,13 +80,12 @@ module.exports = {
     purgeCssConfig: {
         // Paths: look in templates folder if working with html files, and in the src folder for js/vue
         paths: [
-            "../templates/**/*.{twig,html}",
-            "../src/**/*.{js,vue}"
+            "./src/**/*.{js,vue,twig,html}"
         ],
         // Whitelist all css components we write ourselves by default.
         // Could be set broader if necessary
         whitelist: [
-            "../src/scss/components/**/*.{scss}"
+            "./src/scss/components/**/*.{scss}"
         ],
         whitelistPatterns: [],
         extensions: [
