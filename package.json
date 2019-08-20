@@ -1,6 +1,6 @@
 {
   "name": "superbrave-build-script",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "index.js",
   "repository": "git@github.com:superbrave/frontend-build-script.git",
   "author": "Hilko Kolbeek <hk@superbrave.nl>",
@@ -30,7 +30,7 @@
       "last 2 Edge versions"
     ]
   },
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.5.5",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-runtime": "^7.5.5",
