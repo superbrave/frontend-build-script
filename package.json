@@ -1,6 +1,6 @@
 {
   "name": "superbrave-build-script",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.js",
   "repository": "git@github.com:superbrave/frontend-build-script.git",
   "author": "Hilko Kolbeek <hk@superbrave.nl>",
