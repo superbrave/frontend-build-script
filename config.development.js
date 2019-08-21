@@ -11,9 +11,6 @@ const merge = require('webpack-merge');
 const path = require('path');
 const webpack = require('webpack');
 
-//webpack plugins
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
 // config files
 const common = require('./config.common.js');
 const settings = require('../../webpack.settings.js');
@@ -111,7 +108,7 @@ const configureStyles = (buildType) => {
                 {
                     loader: 'style-loader',
                     options: {
-                       sourceMap: true
+                        sourceMap: true
                     }
                 },
                 {
@@ -161,7 +158,6 @@ module.exports = [
                 ],
             },
             plugins: [
-                new BundleAnalyzerPlugin(),
                 new webpack.HotModuleReplacementPlugin(),
             ],
         }
@@ -184,7 +180,6 @@ module.exports = [
                 ],
             },
             plugins: [
-                new BundleAnalyzerPlugin(),
                 new webpack.HotModuleReplacementPlugin(),
             ],
         }
