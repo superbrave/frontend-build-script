@@ -32,7 +32,7 @@ module.exports = {
         live: "https://example.com/",
         local: "http://localhost:8080",
         critical: "http://localhost:8080",
-        publicPath: () => process.env.PUBLIC_PATH || "./dist/",
+        publicPath: () => process.env.PUBLIC_PATH || "",
     },
     vars: {
         cssName: "style"

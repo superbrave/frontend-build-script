@@ -11,6 +11,9 @@ const merge = require('webpack-merge');
 const path = require('path');
 const webpack = require('webpack');
 
+// Webpack plugins
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+
 // config files
 const common = require('./config.common.js');
 const settings = require('../../webpack.settings.js');
@@ -138,6 +141,21 @@ const configureStyles = (buildType) => {
     }
 };
 
+/**
+ * Set the Vue loader
+ *
+ * @returns {{test: RegExp, use: *[]}|{test: RegExp, loader: string}}
+ */
+const configureVue = () => {
+    return {
+        test: /\.vue$/,
+        use: [
+            {
+                loader: 'vue-loader'
+            }
+        ]
+    }
+}
 
 module.exports = [
     merge(
@@ -152,14 +170,21 @@ module.exports = [
             devServer: configureDevServer(LEGACY_CONFIG),
             module: {
                 rules: [
+                    configureVue(),
                     configureStyles(LEGACY_CONFIG),
                     configureImagesLoader(),
-                    configureFontLoader()
+                    configureFontLoader(),
                 ],
             },
             plugins: [
                 new webpack.HotModuleReplacementPlugin(),
+                new VueLoaderPlugin(),
             ],
+            resolve: {
+                alias: {
+                    'vue$': 'vue/dist/vue.esm.js'
+                }
+            },
         }
     ),
     merge(
@@ -174,14 +199,21 @@ module.exports = [
             devServer: configureDevServer(MODERN_CONFIG),
             module: {
                 rules: [
+                    configureVue(),
                     configureStyles(MODERN_CONFIG),
                     configureImagesLoader(),
-                    configureFontLoader()
+                    configureFontLoader(),
                 ],
             },
             plugins: [
                 new webpack.HotModuleReplacementPlugin(),
+                new VueLoaderPlugin(),
             ],
+            resolve: {
+                alias: {
+                    'vue$': 'vue/dist/vue.esm.js'
+                }
+            },
         }
     ),
 ];

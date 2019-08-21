@@ -12,11 +12,12 @@ const path = require('path');
 const glob = require('glob-all');
 
 //webpack plugins
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const PurgecssPlugin = require('purgecss-webpack-plugin');
 const PurgecssWhitelisterPlugin = require('purgecss-whitelister');
 const CriticalCssPlugin = require('critical-css-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 // config files
 const common = require('./config.common.js');
@@ -140,25 +141,40 @@ const configureImagesLoader = () => {
 
 const configureCriticalCss = () => {
     return (settings.criticalCssConfig.pages.map((row) => {
-            const criticalSrc = settings.urls.critical + row.url;
-            const criticalDest = settings.criticalCssConfig.base + row.template + settings.criticalCssConfig.suffix;
-            let criticalWidth = settings.criticalCssConfig.criticalWidth;
-            let criticalHeight = settings.criticalCssConfig.criticalHeight;
-            console.log("source: " + criticalSrc + " dest: " + criticalDest);
-            return new CriticalCssPlugin({
-                base: './',
-                src: criticalSrc,
-                dest: criticalDest,
-                extract: false,
-                inline: true,
-                minify: true,
-                width: criticalWidth,
-                height: criticalHeight,
-            })
+        const criticalSrc = settings.urls.critical + row.url;
+        const criticalDest = settings.criticalCssConfig.base + row.template + settings.criticalCssConfig.suffix;
+        let criticalWidth = settings.criticalCssConfig.criticalWidth;
+        let criticalHeight = settings.criticalCssConfig.criticalHeight;
+        console.log("source: " + criticalSrc + " dest: " + criticalDest);
+        return new CriticalCssPlugin({
+            base: './',
+            src: criticalSrc,
+            dest: criticalDest,
+            extract: false,
+            inline: true,
+            minify: true,
+            width: criticalWidth,
+            height: criticalHeight,
         })
+    })
     );
 };
 
+/**
+ * Set the Vue loader
+ *
+ * @returns {{test: RegExp, use: *[]}|{test: RegExp, loader: string}}
+ */
+const configureVue = () => {
+    return {
+        test: /\.vue$/,
+        use: [
+            {
+                loader: 'vue-loader'
+            }
+        ]
+    }
+}
 
 /**
  * Run the export for production.
@@ -175,6 +191,7 @@ module.exports = [
             mode: 'production',
             module: {
                 rules: [
+                    configureVue(),
                     configureFontLoader(),
                     configureImagesLoader(),
                     configureStyles(LEGACY_CONFIG)
@@ -190,7 +207,8 @@ module.exports = [
                 ),
                 new CleanWebpackPlugin(
                     configureCleanWebpack()
-                )
+                ),
+                new VueLoaderPlugin(),
             ]
         }
     ),
@@ -203,11 +221,15 @@ module.exports = [
             mode: 'production',
             module: {
                 rules: [
+                    configureVue(),
                     configureFontLoader(),
                     configureImagesLoader(),
-                    configureStyles(MODERN_CONFIG)
+                    configureStyles(MODERN_CONFIG),
                 ],
-            }
+            },
+            plugins: [
+                new VueLoaderPlugin(),
+            ]
         }
     ),
 ];
