@@ -17,6 +17,7 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 const PrettierPlugin = require('prettier-webpack-plugin');
 const copyWebpackPlugin = require('copy-webpack-plugin');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
+const HtmlLoader = require('html-loader');
 
 // config files
 const pkgSettings = require('../../package.json');
@@ -64,6 +65,18 @@ const configureBabelLoader = (browserList) => {
             }
         ],
     };
+};
+
+const configureSvgLoader = () => {
+	return {
+		test: /\.svg$/,
+		use: [{
+        loader: 'html-loader',
+        options: {
+          minimize: true
+        }
+      }],
+	};
 };
 
 /** Configure manifest.json settings
@@ -131,7 +144,8 @@ const legacyConfig = {
     module: {
         rules: [
             configureBabelLoader(Object.values(pkgSettings.browserslist.legacyBrowsers)),
-        ],
+			configureSvgLoader(),
+		],
     },
     plugins: [
         new copyWebpackPlugin(
@@ -153,6 +167,7 @@ const modernConfig = {
     module: {
         rules: [
             configureBabelLoader(Object.values(pkgSettings.browserslist.modernBrowsers)),
+			configureSvgLoader(),
         ],
     },
     plugins: [
