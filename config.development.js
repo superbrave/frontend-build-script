@@ -12,7 +12,8 @@ const path = require('path');
 const webpack = require('webpack');
 
 // Webpack plugins
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // config files
 const common = require('./config.common.js');
@@ -88,6 +89,16 @@ const configureImagesLoader = () => {
     }
 };
 
+const configureHtmlWebpackPlugin = () => {
+    let configuration = {
+        title: settings.name,
+        inject: false,
+        template: settings.paths.src.templates + settings.paths.src.entryFile
+    };
+
+    return configuration;
+};
+
 /**
  * Process CSS:
  * don't extract it into seperate files, just inline is ok.
@@ -130,7 +141,10 @@ const configureStyles = (buildType) => {
                 {
                     loader: 'postcss-loader',
                     options: {
-                        sourceMap: true
+                        sourceMap: true,
+                        config: {
+                            path: './node_modules/superbrave-build-script/'
+                        }
                     }
                 },
                 {
@@ -179,6 +193,9 @@ module.exports = [
             plugins: [
                 new webpack.HotModuleReplacementPlugin(),
                 new VueLoaderPlugin(),
+                new HtmlWebpackPlugin(
+                    configureHtmlWebpackPlugin()
+                )
             ],
             resolve: {
                 alias: {
@@ -208,6 +225,9 @@ module.exports = [
             plugins: [
                 new webpack.HotModuleReplacementPlugin(),
                 new VueLoaderPlugin(),
+                new HtmlWebpackPlugin(
+                    configureHtmlWebpackPlugin()
+                )
             ],
             resolve: {
                 alias: {

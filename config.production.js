@@ -17,12 +17,12 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const PurgecssPlugin = require('purgecss-webpack-plugin');
 const PurgecssWhitelisterPlugin = require('purgecss-whitelister');
 const CriticalCssPlugin = require('critical-css-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // config files
 const common = require('./config.common.js');
 const settings = require('../../webpack.settings.js');
-
 
 /**
  * Clean webpack: remove dist files before new build.
@@ -45,7 +45,7 @@ const configureCleanWebpack = () => {
  * @returns {{test: RegExp, loader: string}|{test: RegExp, use: *[]}}
  */
 const configureStyles = (buildType) => {
-    if (buildType === LEGACY_CONFIG) {
+    if (buildType === MODERN_CONFIG) {
         return {
             test: /\.scss$/,
             use: [
@@ -73,7 +73,7 @@ const configureStyles = (buildType) => {
         };
     }
     // No need to build 2 sets of css (they are the same), so ignore this for the modern config.
-    if (buildType === MODERN_CONFIG) {
+    if (buildType === LEGACY_CONFIG) {
         return {
             test: /\.scss$/,
             loader: 'ignore-loader'
@@ -139,6 +139,16 @@ const configureImagesLoader = () => {
     }
 };
 
+const configureHtmlWebpackPlugin = () => {
+    let configuration = {
+        title: settings.name,
+        inject: false,
+        template: settings.paths.src.templates + settings.paths.src.entryFile
+    };
+
+    return configuration;
+};
+
 const configureCriticalCss = () => {
     return (settings.criticalCssConfig.pages.map((row) => {
         const criticalSrc = settings.urls.critical + row.url;
@@ -186,7 +196,7 @@ module.exports = [
         common.legacyConfig,
         {
             output: {
-                filename: path.join('./js', '[name]-legacy.[chunkhash].js'),
+                filename: path.join('./js', '[name].[chunkhash].js'),
             },
             mode: 'production',
             module: {
@@ -194,21 +204,17 @@ module.exports = [
                     configureVue(),
                     configureFontLoader(),
                     configureImagesLoader(),
-                    configureStyles(LEGACY_CONFIG)
+                    configureStyles(LEGACY_CONFIG),
                 ],
             },
             plugins: [
-                new MiniCssExtractPlugin({
-                    path: path.resolve(__dirname, settings.paths.dist.base),
-                    filename: path.join('./css', '[name].[chunkhash].css'),
-                }),
-                new PurgecssPlugin(
-                    configurePurgeCss()
-                ),
                 new CleanWebpackPlugin(
                     configureCleanWebpack()
                 ),
                 new VueLoaderPlugin(),
+                new HtmlWebpackPlugin(
+                    configureHtmlWebpackPlugin()
+                )
             ]
         }
     ),
@@ -228,7 +234,17 @@ module.exports = [
                 ],
             },
             plugins: [
+                new MiniCssExtractPlugin({
+                    path: path.resolve(__dirname, settings.paths.dist.base),
+                    filename: path.join('./css', '[name].[chunkhash].css'),
+                }),
+                new PurgecssPlugin(
+                    configurePurgeCss()
+                ),
                 new VueLoaderPlugin(),
+                new HtmlWebpackPlugin(
+                    configureHtmlWebpackPlugin()
+                )
             ]
         }
     ),
