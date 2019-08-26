@@ -13,11 +13,10 @@ const merge = require('webpack-merge');
 
 //webpack plugins
 const WebpackNotifierPlugin = require('webpack-notifier');
-const ManifestPlugin = require('webpack-manifest-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const PrettierPlugin = require('prettier-webpack-plugin');
-const htmlWebpackPlugin = require('html-webpack-plugin');
 const copyWebpackPlugin = require('copy-webpack-plugin');
+const WebpackAssetsManifest = require('webpack-assets-manifest');
 
 // config files
 const pkgSettings = require('../../package.json');
@@ -42,16 +41,16 @@ const configureBabelLoader = (browserList) => {
                     presets: [
                         [
                             '@babel/preset-env', {
-                            modules: false,
-                            corejs: {
-                                version: 3,
-                                proposals: true
-                            },
-                            useBuiltIns: 'usage',
-                            targets: {
-                                browsers: browserList,
-                            },
-                        }
+                                modules: false,
+                                corejs: {
+                                    version: 3,
+                                    proposals: true
+                                },
+                                useBuiltIns: 'usage',
+                                targets: {
+                                    browsers: browserList,
+                                },
+                            }
                         ],
                     ],
                     plugins: [
@@ -67,39 +66,26 @@ const configureBabelLoader = (browserList) => {
     };
 };
 
-const configureHtmlWebpackPlugin = () => {
-    let configuration = {
-        title: settings.name,
-        template: settings.paths.src.templates + settings.paths.src.entryFile
-    };
-
-    return configuration;
-};
-
 /** Configure manifest.json settings
  *  Create two manifest files for legacy and modern.
  *
  * @param fileName
  * @returns {{fileName: *, basePath: string, map: (function(*): *)}}
  */
-const configureManifest = (fileName) => {
+const configureAssetsManifest = (filename, isLegacy = false) => {
     return {
-        fileName: fileName,
-        basePath: '',
-        map: (file) => {
-            file.name = file.name.replace(/(\.[a-f0-9]{32})(\..*)$/, '$2');
-            return file;
-        },
+        output: filename,
+        merge: true
     };
 };
 
 /**
  * Load all entry files from settings file.
  */
-const configureEntries = () => {
+const configureEntries = (buildType) => {
     let entries = {};
     for (const [key, value] of Object.entries(settings.entries)) {
-        entries[key] = path.resolve(settings.paths.src.js + value);
+        entries[buildType] = path.resolve(settings.paths.src.js + value);
     }
 
     return entries;
@@ -121,7 +107,6 @@ const configurePrettier = () => {
  */
 const baseConfig = {
     name: pkgSettings.name,
-    entry: configureEntries(),
     output: {
         path: path.resolve(settings.paths.dist.base),
         publicPath: settings.urls.publicPath()
@@ -142,6 +127,7 @@ const baseConfig = {
  * @type {{plugins: [*, *], module: {rules: [*]}}}
  */
 const legacyConfig = {
+    entry: configureEntries(LEGACY_CONFIG),
     module: {
         rules: [
             configureBabelLoader(Object.values(pkgSettings.browserslist.legacyBrowsers)),
@@ -151,8 +137,8 @@ const legacyConfig = {
         new copyWebpackPlugin(
             settings.copyWebpackConfig
         ),
-        new ManifestPlugin(
-            configureManifest('manifest-legacy.json')
+        new WebpackAssetsManifest(
+            configureAssetsManifest('manifest.json', true)
         )
     ]
 };
@@ -163,22 +149,20 @@ const legacyConfig = {
  * @type {{plugins: [*], module: {rules: [*]}}}
  */
 const modernConfig = {
+    entry: configureEntries(MODERN_CONFIG),
     module: {
         rules: [
             configureBabelLoader(Object.values(pkgSettings.browserslist.modernBrowsers)),
         ],
     },
     plugins: [
-        new ManifestPlugin(
-            configureManifest('manifest.json')
+        new WebpackAssetsManifest(
+            configureAssetsManifest('manifest.json')
         ),
         new PrettierPlugin(
             configurePrettier()
         ),
-        new StyleLintPlugin(),
-        new htmlWebpackPlugin(
-            configureHtmlWebpackPlugin()
-        )
+        new StyleLintPlugin()
     ]
 };
 
