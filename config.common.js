@@ -72,7 +72,7 @@ const configureBabelLoader = (browserList) => {
  * @param fileName
  * @returns {{fileName: *, basePath: string, map: (function(*): *)}}
  */
-const configureAssetsManifest = (filename, isLegacy = false) => {
+const configureAssetsManifest = (filename) => {
     return {
         output: filename,
         merge: true
@@ -138,7 +138,7 @@ const legacyConfig = {
             settings.copyWebpackConfig
         ),
         new WebpackAssetsManifest(
-            configureAssetsManifest('manifest.json', true)
+            configureAssetsManifest('manifest.json')
         )
     ]
 };
