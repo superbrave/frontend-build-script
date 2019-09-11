@@ -1,6 +1,24 @@
 {
-  "extends": "stylelint-config-recommended",
+  "extends": [
+    "stylelint-config-recommended",
+    "stylelint-config-prettier"
+  ],
+  "plugins": [
+    "stylelint-prettier"
+  ],
   "rules": {
-    "at-rule-no-unknown": null
+    "prettier/prettier": true,
+    "at-rule-no-unknown": null,
+    "max-empty-lines": 1,
+    "at-rule-semicolon-newline-after": "always",
+    "rule-empty-line-before": [
+      "always-multi-line",
+      {
+        "ignore": [
+          "after-comment",
+          "first-nested"
+        ]
+      }
+    ]
   }
 }

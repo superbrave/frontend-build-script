@@ -1,10 +1,10 @@
 # Frontend Build Script
 
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-
 This repository is intended as an opiniated approach to building assets and configuring linters. The linter settings therefor cannot be changed.
 
 This repo is using Prettier to automatic format code to prevent the obvious style typos.
+
+Prettier is integrated within the `stylelint` and `eslint` configuration files. If you like to disable prettier just remove these lines in your own config.
 
 ## 1. Installation
 
@@ -22,15 +22,16 @@ npm i superbrave-build-script
 
 ## 2. Configuration
 
-Copy the file `./node_modules/superbrave-build-script/example.webpack.settings.js` to `./webpack.settings.js`.
-Additionally change `.env.example` to `.env` if you want settings for local development.
-
 Make sure you copy the following files to your project's root folder:
 
 ```bash
+cp ./node_modules/superbrave-build-script/example.webpack.settings.js ./webpack.settings.js
 cp ./node_modules/superbrave-build-script/.eslintrc ./.eslintrc
 cp ./node_modules/superbrave-build-script/.stylelintrc.json ./.stylelintrc.json
+cp ./node_modules/superbrave-build-script/.prettierrc ./.prettierrc
 ```
+
+Additionally change `.env.example` to `.env` if you want settings for local development.
 
 Now you can change the variables as you desire.
 

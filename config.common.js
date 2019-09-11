@@ -14,10 +14,8 @@ const merge = require('webpack-merge');
 //webpack plugins
 const WebpackNotifierPlugin = require('webpack-notifier');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
-const PrettierPlugin = require('prettier-webpack-plugin');
 const copyWebpackPlugin = require('copy-webpack-plugin');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
-const HtmlLoader = require('html-loader');
 
 // config files
 const pkgSettings = require('../../package.json');
@@ -61,22 +59,25 @@ const configureBabelLoader = (browserList) => {
                 },
             },
             {
-                loader: 'eslint-loader'
+                loader: 'eslint-loader',
+                options: {
+                    fix: true
+                }
             }
         ],
     };
 };
 
 const configureSvgLoader = () => {
-	return {
-		test: /\.svg$/,
-		use: [{
-        loader: 'html-loader',
-        options: {
-          minimize: true
-        }
-      }],
-	};
+    return {
+        test: /\.svg$/,
+        use: [{
+            loader: 'html-loader',
+            options: {
+                minimize: true
+            }
+        }],
+    };
 };
 
 /** Configure manifest.json settings
@@ -105,11 +106,12 @@ const configureEntries = (buildType) => {
 };
 
 /**
- * Configure Prettier
+ * Configure Stylelint plugin
  */
-const configurePrettier = () => {
+const configureStylelint = () => {
     return {
-        singleQuote: true
+        fix: true,
+        files: settings.paths.src.css + '**/*.scss'
     }
 };
 
@@ -144,8 +146,8 @@ const legacyConfig = {
     module: {
         rules: [
             configureBabelLoader(Object.values(pkgSettings.browserslist.legacyBrowsers)),
-			configureSvgLoader(),
-		],
+            configureSvgLoader(),
+        ],
     },
     plugins: [
         new copyWebpackPlugin(
@@ -167,17 +169,16 @@ const modernConfig = {
     module: {
         rules: [
             configureBabelLoader(Object.values(pkgSettings.browserslist.modernBrowsers)),
-			configureSvgLoader(),
+            configureSvgLoader(),
         ],
     },
     plugins: [
         new WebpackAssetsManifest(
             configureAssetsManifest('manifest.json')
         ),
-        new PrettierPlugin(
-            configurePrettier()
-        ),
-        new StyleLintPlugin()
+        new StyleLintPlugin(
+            configureStylelint()
+        )
     ]
 };
 
